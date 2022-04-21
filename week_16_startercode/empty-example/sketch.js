@@ -5,9 +5,20 @@ let score = 0;
 let easyHealth = 5;
 let hardHealth = 1;
 let screen = 1;
+let pop;
+let end;
+let squelch;
+
+function preload(){
+    pop = loadSound('530830-Cartoon_Vacuum_Pop.wav');
+    end = loadSound('273689-Retro-Game-Over-4.wav');
+    squelch = loadSound('542677-zapsplat-foley-wet-cloth-dab-squelch-soft-single-005-66315.wav');
+}
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
+    //getAudioContext().suspend();
+    
 }
 
 function draw() {
@@ -17,7 +28,7 @@ function draw() {
     if(screen == 1){
     fill(0);
     textSize(50);
-    textAlign(LEFT, CENTER);
+    textAlign(CENTER, CENTER);
     text("Press 1 for easy mode", windowWidth/2, windowHeight/2);
     text("Press 2 for hard mode", windowWidth/2, (windowHeight/2)+50);
 
@@ -42,6 +53,7 @@ function draw() {
 
                 easyHealth -=1;
                 ellipses.splice(i,1);
+                squelch.play();
             }
         }
 
@@ -56,6 +68,7 @@ function draw() {
         text("Health:" + easyHealth, 10, 60);
 
         if(easyHealth <= 0){
+            end.play();
             screen = 4;
         }
     }
@@ -88,6 +101,7 @@ function draw() {
             text("Health:" + hardHealth, 10, 60);
     
             if(hardHealth <= 0){
+                end.play();
                 screen = 4;
             }
         
@@ -96,18 +110,22 @@ function draw() {
     }else if(screen == 4){
         fill(0);
         textSize(50);
-        textAlign(LEFT, CENTER);
+        textAlign(CENTER, CENTER);
         text("Game Over", windowWidth/2, windowHeight/2);
     }
 }
 
 function mousePressed(){
 
+    
+
+
     for(i = 0; i < ellipses.length; i++){
         let d = dist(mouseX, mouseY, ellipses[i].x, ellipses[i].y);
 
         if(d < ellipses[i].a){
             ellipses.splice(i,1);
+            pop.play();
             score +=1;
             console.log(score);
         }
