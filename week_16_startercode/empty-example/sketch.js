@@ -1,4 +1,5 @@
 let ellipses = [];
+let size;
 let y = 0;
 let score = 0;
 let easyHealth = 5;
@@ -12,10 +13,12 @@ function preload(){
     pop = loadSound('530830-Cartoon_Vacuum_Pop.wav');
     end = loadSound('273689-Retro-Game-Over-4.wav');
     squelch = loadSound('542677-zapsplat-foley-wet-cloth-dab-squelch-soft-single-005-66315.wav');
+    fontBold = loadFont('Cairo-VariableFont_wght.ttf');
 }
 
 function setup() {
-    createCanvas(windowWidth, windowHeight);    
+    createCanvas(windowWidth, windowHeight);
+
 }
 
 function draw() {
@@ -26,6 +29,7 @@ function draw() {
     fill(0);
     textSize(50);
     textAlign(CENTER, CENTER);
+    textFont(fontBold);
     text("Press 1 for easy mode", windowWidth/2, windowHeight/2);
     text("Press 2 for hard mode", windowWidth/2, (windowHeight/2)+50);
 
@@ -38,8 +42,9 @@ function draw() {
     }
     //game running (easy mode)
     if(screen == 2){
+        size = 100;
         if (frameCount % 25 == 0) {
-            ellipses.push(new Alien);
+            ellipses.push(new Alien(size));
         }
 
         for(i = 0; i < ellipses.length; i++){
@@ -72,8 +77,9 @@ function draw() {
     
         //game running (hard mode)
         else if(screen == 3){
+            size = 50;
             if (frameCount % 15 == 0) {
-                ellipses.push(new Alien);
+                ellipses.push(new Alien(size));
             }
     
             for(i = 0; i < ellipses.length; i++){
@@ -112,6 +118,10 @@ function draw() {
 
         if (keyCode == ENTER){
             screen = 1;
+            easyHealth = 5;
+            hardHealth = 1;
+            score = 0;
+            ellipses = [];
         }
     }
 }
@@ -120,7 +130,7 @@ function mousePressed(){
     for(i = 0; i < ellipses.length; i++){
         let d = dist(mouseX, mouseY, ellipses[i].x, ellipses[i].y);
 
-        if(d < ellipses[i].a){
+        if(d < ellipses[i].size){
             ellipses.splice(i,1);
             pop.play();
             score +=1;
@@ -131,10 +141,10 @@ function mousePressed(){
 
 class Alien{
 
-    constructor(){
-        this.a = 100;
-        this.b = 100;
-        this.x = random(0, windowWidth);
+    constructor(size){
+        this.size = size;
+        this.size = size;
+        this.x = random((0 + 50), (windowWidth - 50));
         this.y = y;
     }
 
@@ -144,6 +154,6 @@ class Alien{
 
     display(){
         fill(255);
-        ellipse(this.x, this.y, this.a, this.b);
+        ellipse(this.x, this.y, this.size, this.size);
     }
 }
