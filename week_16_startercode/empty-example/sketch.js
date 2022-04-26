@@ -1,5 +1,4 @@
 let ellipses = [];
-//let e1;
 let y = 0;
 let score = 0;
 let easyHealth = 5;
@@ -16,9 +15,7 @@ function preload(){
 }
 
 function setup() {
-    createCanvas(windowWidth, windowHeight);
-    //getAudioContext().suspend();
-    
+    createCanvas(windowWidth, windowHeight);    
 }
 
 function draw() {
@@ -112,14 +109,14 @@ function draw() {
         textSize(50);
         textAlign(CENTER, CENTER);
         text("Game Over", windowWidth/2, windowHeight/2);
+
+        if (keyCode == ENTER){
+            screen = 1;
+        }
     }
 }
 
 function mousePressed(){
-
-    
-
-
     for(i = 0; i < ellipses.length; i++){
         let d = dist(mouseX, mouseY, ellipses[i].x, ellipses[i].y);
 
@@ -148,6 +145,5 @@ class Alien{
     display(){
         fill(255);
         ellipse(this.x, this.y, this.a, this.b);
-        
     }
 }
