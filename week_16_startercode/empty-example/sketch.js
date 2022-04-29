@@ -114,7 +114,13 @@ function draw() {
         fill(0);
         textSize(50);
         textAlign(CENTER, CENTER);
+        textFont(fontBold);
         text("Game Over", windowWidth/2, windowHeight/2);
+        //fill(0);
+        textSize(30);
+        //textAlign(CENTER, CENTER);
+        //textFont(fontBold);
+        text("Press Enter to return to menu", windowWidth/2, (windowHeight/2)+40);
 
         if (keyCode == ENTER){
             screen = 1;
