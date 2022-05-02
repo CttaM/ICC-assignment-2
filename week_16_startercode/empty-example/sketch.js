@@ -1,4 +1,5 @@
 let ellipses = [];
+let clouds;
 let level;
 let size;
 let health;
@@ -22,6 +23,7 @@ function preload(){
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
+    cloud = new Cloud;
 
 }
 
@@ -45,17 +47,19 @@ function draw() {
         spawnRate = 50;
         health = 3;
         level = 5;
+        cloud.init();
     }
     if(keyCode === 50){
         screen = 2;
         count = 0;
         score = 0;
         size = 75;
-        spawnRate = 15;
-        health = 1;
+        spawnRate = 30;
+        health = 3;
         level = 5;
+        cloud.init();
     }
-    }
+}
     //game running (easy mode)
     if(screen == 2){
         if (frameCount % spawnRate == 0) {
@@ -64,7 +68,9 @@ function draw() {
 
             if(count % 10 == 0){
                 size -= 10;
+                spawnRate -= 5;
                 level --;
+                cloud.setLevel(level);
             }
             ellipses.push(new Alien(size));
         }
@@ -81,6 +87,9 @@ function draw() {
             }
         }
 
+        cloud.move();
+        cloud.display();
+        
         fill(0);
         textSize(24);
         textAlign(LEFT, CENTER);
@@ -139,15 +148,12 @@ function draw() {
 }
 
 function mousePressed(){
-    for(i = 0; i < ellipses.length; i++){
-        let d = dist(mouseX, mouseY, ellipses[i].x, ellipses[i].y);
+    if(cloud.hit()){
+        return;
+    }
 
-        if(d < ellipses[i].size){
-            ellipses.splice(i,1);
-            pop.play();
-            score +=1;
-            console.log(score);
-        }
+    for(i = 0; i < ellipses.length; i++){
+        ellipses[i].hit();
     }
 }
 
@@ -160,6 +166,17 @@ class Alien{
         this.y = y;
     }
 
+    hit(){
+        let d = dist(mouseX, mouseY, ellipses[i].x, ellipses[i].y);
+
+        if(d < ellipses[i].size){
+            ellipses.splice(i,1);
+            pop.play();
+            score +=1;
+            console.log(score);
+        }
+    }
+
     move(){
         this.y+=4;
     }
@@ -167,5 +184,48 @@ class Alien{
     display(){
         fill(255);
         ellipse(this.x, this.y, this.size, this.size);
+    }
+}
+
+class Cloud{
+
+    constructor(){
+        this.init();
+    }
+
+    init(){
+        this.w = 150;
+        this.h = 100;
+        this.x = -150
+        this.y = 0;
+        this.vel = 4;
+        this.setLevel(5);
+    }
+
+    setLevel(level){
+        this.y = (windowHeight/5) * (5-level);
+    }
+
+    hit(){
+        if(mouseX > this.x && mouseX < this.x + 150 && mouseY > this.y && mouseY < this.y + 100){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    move(){
+        this.x+= this.vel;
+        if(this.x > windowWidth-150){
+            this.vel = -4;
+        }
+        if(this.x < 0){
+            this.vel = +4;
+        }
+    }
+
+    display(){
+        fill(255, 10, 2);
+        rect(this.x, this.y, this.w, this.h);
     }
 }
