@@ -1,18 +1,22 @@
 let ellipses = [];
+let level;
 let size;
+let health;
+let spawnRate;
+let count;
 let y = 0;
 let score = 0;
-let easyHealth = 5;
-let hardHealth = 1;
 let screen = 1;
 let pop;
 let end;
 let squelch;
+let victory;
 
 function preload(){
     pop = loadSound('530830-Cartoon_Vacuum_Pop.wav');
     end = loadSound('273689-Retro-Game-Over-4.wav');
     squelch = loadSound('542677-zapsplat-foley-wet-cloth-dab-squelch-soft-single-005-66315.wav');
+    victory = loadSound('17300-trumpets_fanfar_2.wav');
     fontBold = loadFont('Cairo-VariableFont_wght.ttf');
 }
 
@@ -35,15 +39,33 @@ function draw() {
 
     if(keyCode === 49){
         screen = 2;
+        count = 0;
+        score = 0;
+        size = 100;
+        spawnRate = 50;
+        health = 3;
+        level = 5;
     }
     if(keyCode === 50){
-        screen = 3;
+        screen = 2;
+        count = 0;
+        score = 0;
+        size = 75;
+        spawnRate = 15;
+        health = 1;
+        level = 5;
     }
     }
     //game running (easy mode)
     if(screen == 2){
-        size = 100;
-        if (frameCount % 25 == 0) {
+        if (frameCount % spawnRate == 0) {
+            
+            count ++;
+
+            if(count % 10 == 0){
+                size -= 10;
+                level --;
+            }
             ellipses.push(new Alien(size));
         }
 
@@ -53,7 +75,7 @@ function draw() {
 
             if(ellipses[i].y > windowHeight){
 
-                easyHealth -=1;
+                health -=1;
                 ellipses.splice(i,1);
                 squelch.play();
             }
@@ -62,71 +84,55 @@ function draw() {
         fill(0);
         textSize(24);
         textAlign(LEFT, CENTER);
-        text("Score:" + score, 10, 30);
+        text("Score:" + score, 10, (windowHeight-30));
         
         fill(0);
         textSize(24);
-        textAlign(LEFT, CENTER);
-        text("Health:" + easyHealth, 10, 60);
+        textAlign(RIGHT, CENTER);
+        text("Health:" + health, (windowWidth-20), (windowHeight-30));
 
-        if(easyHealth <= 0){
+        fill(0);
+        textSize(24);
+        textAlign(CENTER, CENTER);
+        text("Level:" + level, (windowWidth/2), (windowHeight-30));
+
+        if(health <= 0){
             end.play();
             screen = 4;
         }
+        if(level == 0){
+            victory.play();
+            screen = 5;
+        }
     }
     
-        //game running (hard mode)
-        else if(screen == 3){
-            size = 50;
-            if (frameCount % 15 == 0) {
-                ellipses.push(new Alien(size));
-            }
-    
-            for(i = 0; i < ellipses.length; i++){
-                ellipses[i].move();
-                ellipses[i].display();
-    
-                if(ellipses[i].y > windowHeight){
-    
-                    hardHealth -=1;
-                    ellipses.splice(i,1);
-                }
-            }
-    
-            fill(0);
-            textSize(24);
-            textAlign(LEFT, CENTER);
-            text("Score:" + score, 10, 30);
-            
-            fill(0);
-            textSize(24);
-            textAlign(LEFT, CENTER);
-            text("Health:" + hardHealth, 10, 60);
-    
-            if(hardHealth <= 0){
-                end.play();
-                screen = 4;
-            }
-        
-
     //game over screen 
-    }else if(screen == 4){
+    if(screen == 4){
         fill(0);
         textSize(50);
         textAlign(CENTER, CENTER);
         textFont(fontBold);
         text("Game Over", windowWidth/2, windowHeight/2);
-        //fill(0);
         textSize(30);
-        //textAlign(CENTER, CENTER);
-        //textFont(fontBold);
         text("Press Enter to return to menu", windowWidth/2, (windowHeight/2)+40);
 
         if (keyCode == ENTER){
             screen = 1;
-            easyHealth = 5;
-            hardHealth = 1;
-            score = 0;
+            ellipses = [];
+        }
+    }
+
+    if(screen == 5){
+        fill(0);
+        textSize(50);
+        textAlign(CENTER, CENTER);
+        textFont(fontBold);
+        text("You win!", windowWidth/2, windowHeight/2);
+        textSize(30);
+        text("Press Enter to return to menu", windowWidth/2, (windowHeight/2)+40);
+
+        if (keyCode == ENTER){
+            screen = 1;
             ellipses = [];
         }
     }
