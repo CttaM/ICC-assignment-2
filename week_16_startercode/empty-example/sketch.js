@@ -12,6 +12,7 @@ let pop;
 let end;
 let squelch;
 let victory;
+let c1, c2;
 
 function preload(){
     pop = loadSound('530830-Cartoon_Vacuum_Pop.wav');
@@ -24,14 +25,21 @@ function preload(){
 function setup() {
     createCanvas(windowWidth, windowHeight);
     cloud = new Cloud;
-
+    c1 = color(255);
+    c2 = color(63, 191, 191);
 }
 
 function draw() {
-    background(255);
-
+ for(let y=0; y<height; y++){
+            n = map(y,0,height,0,1);
+            let newc = lerpColor(c1,c2,n);
+            stroke(newc);
+            line(0,y,width, y);
+    }   
     //start screen
     if(screen == 1){
+    c1 = color(255);
+    c2 = color(63, 191, 191);
     fill(0);
     textSize(50);
     textAlign(CENTER, CENTER);
@@ -47,6 +55,8 @@ function draw() {
         spawnRate = 50;
         health = 3;
         level = 5;
+        c1 = color(255);
+        c2 = color(234, 205, 86);
         cloud.init();
     }
     if(keyCode === 50){
@@ -57,6 +67,8 @@ function draw() {
         spawnRate = 30;
         health = 3;
         level = 5;
+        c1 = color(255);
+        c2 = color(230, 57, 89);
         cloud.init();
     }
 }
@@ -146,6 +158,7 @@ function draw() {
         }
     }
 }
+
 
 function mousePressed(){
     if(cloud.hit()){
