@@ -56,7 +56,7 @@ function draw() {
     textSize(80);
     textAlign(CENTER, CENTER);
     textFont(fontBold);
-    //display user commands
+    //display game title
     text("Bubble Pop", windowWidth/2, 50);
 
     fill(0);
@@ -66,6 +66,13 @@ function draw() {
     //display user commands
     text("Press 1 for easy mode", windowWidth/2, windowHeight/2);
     text("Press 2 for hard mode", windowWidth/2, (windowHeight/2)+50);
+
+    fill(0);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    textFont(fontBold);
+    //display game instruction
+    text("Click on the falling circles before they reach the bottom.", windowWidth/2, (windowHeight/2)+120);
     
     //if 1 is pressed, then easy mode is selected, game parameters are set accordingly
     if(keyCode === 49){
