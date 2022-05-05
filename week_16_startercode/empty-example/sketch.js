@@ -241,7 +241,7 @@ class Cloud{
     constructor(){
         this.init();
     }
-    //need Dad
+    
     init(){
         this.w = 150;
         this.h = 100;
